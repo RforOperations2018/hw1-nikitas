@@ -26,14 +26,15 @@ ui <- fluidPage(
                         # Output plots
                         mainPanel(
                           fluidPage(plotlyOutput("cut_count_plot"), 
-                                    plotlyOutput("cut_carat_plot"),
-                                    h3("Table by Cut"),
-                                    DT::dataTableOutput("table_by_cut"), 
-                                    h3("Table by Carat"),
-                                    DT::dataTableOutput("table_by_carat")
-                                )
+                                    plotlyOutput("cut_carat_plot"))
                                    )
-                        )
+                        ),
+                      
+                      h3("Table by Cut"),
+                      DT::dataTableOutput("table_by_cut"), 
+                      h3("Table by Carat"),
+                      DT::dataTableOutput("table_by_carat")
+                      
                       )
              ,
              # Carat - Cut Interaction Plot
@@ -50,8 +51,7 @@ ui <- fluidPage(
                           )),
                         # Output plots
                         mainPanel(
-                          fluidPage(h3("Price by Cut & Carat"),
-                                    plotlyOutput("carat_cut_price_plot")))
+                          fluidPage(plotlyOutput("carat_cut_price_plot")))
                         
                        
                       ),
@@ -105,30 +105,31 @@ server <- function(input, output) {
   output$cut_count_plot <- renderPlotly({
     dat <- subset(summary_by_cut, cut %in% input$cut_select)
     ggplot(data = dat, aes(x = cut, y = count, fill = cut)) + geom_histogram(stat = "identity") +
-      ggtitle("Plot of Diamond Count by Cut")
+      ggtitle("Diamond Count by Cut")
   })
   output$cut_carat_plot <- renderPlotly({
     dat <- subset(diamonds, cut %in% input$cut_select)
     ggplot(data = dat, aes(x = cut, y = carat, fill = cut)) + geom_violin() + 
-      ggtitle("Plot of Diamond Carat by Cut")
+      ggtitle("Diamond Carat by Cut")
   })
   output$carat_cut_price_plot <- renderPlotly({
     dat <- subset(diamonds, cut %in% input$cut_select & carat >= input$carat_select[1] & carat <= input$carat_select[2]) %>% 
-      sample_n(500)
+      sample_n(500) #took a 500 point sample, so only a representation of diamond population
     ggplot(data = dat, aes(x = price, y = carat, fill = cut)) + geom_point() + 
-      ggtitle("Plot of Diamond Price by Cut and Carat")
+      ggtitle("Diamond Price by Cut and Carat (Sample = 500)")
   })
   output$table_by_cut <- DT::renderDataTable({
-    subset(summary_by_cut, cut %in% input$cut_select, 
+    subset(summary_by_cut,
            select = c(cut, count, avg_carat, min_carat, max_carat, mode_color, mode_clarity, avg_depth, 
                       avg_table, avg_price, min_price, max_price))
   })
   output$table_by_carat <- DT::renderDataTable({
-    subset(summary_by_carat, select = c(carat, count, mode_cut, mode_color, mode_clarity, avg_depth, 
+    subset(summary_by_carat, 
+           select = c(carat, count, mode_cut, mode_color, mode_clarity, avg_depth, 
                       avg_table, avg_price, min_price, max_price))
   })
   output$table_by_carat_cut <- DT::renderDataTable({
-    subset(summary_carat_cut, cut %in% input$cut_select,
+    subset(summary_carat_cut,
            select = c(cut, carat, count, mode_color, mode_clarity, avg_depth, 
                       avg_table, avg_price, min_price, max_price))
   })
