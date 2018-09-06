@@ -26,7 +26,7 @@ ui <- fluidPage(
                         # Output plots
                         mainPanel(
                           fluidRow(plotlyOutput("cut_count_plot"), plotlyOutput("cut_carat_plot")
-                                   , plotlyOutput("carat_cut_price_plot")
+                                   #, plotlyOutput("carat_cut_price_plot")
                                    )
                         )
                       )
