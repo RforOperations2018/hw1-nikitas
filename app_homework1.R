@@ -13,7 +13,7 @@ data("diamonds")
 ui <- fluidPage(
   navbarPage("Diamonds NavBar", 
              theme = shinytheme("sandstone"),
-             tabPanel("Diamond Analysis by Cuts & Carats",
+             tabPanel("Diamonds by Cuts",
                       sidebarLayout(
                         sidebarPanel(
                           selectInput("cut_select",
@@ -25,14 +25,19 @@ ui <- fluidPage(
                         ),
                         # Output plots
                         mainPanel(
-                          fluidRow(plotlyOutput("cut_count_plot"), plotlyOutput("cut_carat_plot")
+                          fluidPage(plotlyOutput("cut_count_plot"), 
+                                    plotlyOutput("cut_carat_plot"),
+                                    h3("Table by Cut"),
+                                    DT::dataTableOutput("table_by_cut"), 
+                                    h3("Table by Carat"),
+                                    DT::dataTableOutput("table_by_carat")
                                 )
                                    )
                         )
                       )
              ,
              # Carat - Cut Interaction Plot
-             tabPanel("Price Interaction Plot",
+             tabPanel("Diamonds by Cuts & Carats",
                       sidebarLayout(
                         sidebarPanel(
                           sliderInput("carat_select",
@@ -45,22 +50,19 @@ ui <- fluidPage(
                           )),
                         # Output plots
                         mainPanel(
-                          fluidRow(plotlyOutput("carat_cut_price_plot")
-                          )
-                        )
+                          fluidPage(h3("Price by Cut & Carat"),
+                                    plotlyOutput("carat_cut_price_plot")))
+                        
+                       
+                      ),
+                      h3("Table by Cut & Carat"),
+                      DT::dataTableOutput("table_by_carat_cut"
+                      
                       )
-             ),
-             
-             # Data Table
-             tabPanel("Diamonds Tables",
-                      fluidPage(h3("Table by Cut"),
-                        DT::dataTableOutput("table_by_cut"), 
-                        h3("Table by Carat"),
-                        DT::dataTableOutput("table_by_carat"), 
-                        h3("Table by Cut & Carat"),
-                        DT::dataTableOutput("table_by_carat_cut"))
              )
-  ))
+             
+             )
+             )
 
 mode <- function(x) {
   ux <- unique(x)
