@@ -8,7 +8,6 @@ pdf(NULL)
 
 data("diamonds")
 
-
 # Define UI for application that draws a histogram
 ui <- fluidPage(
   navbarPage("Diamonds NavBar", 
@@ -52,12 +51,9 @@ ui <- fluidPage(
                         # Output plots
                         mainPanel(
                           fluidPage(plotlyOutput("carat_cut_price_plot")))
-                        
-                       
                       ),
                       h3("Table by Cut & Carat"),
                       DT::dataTableOutput("table_by_carat_cut"
-                      
                       )
              )
              
@@ -69,6 +65,7 @@ mode <- function(x) {
   ux[which.max(tabulate(match(x, ux)))]
 }
 
+# These being done outside of the server app isn't necessarily a best practice. In the future you will want to do things like thing inside the server function as a reactive function. It will speed up loading of the UI and what not in the future. It works fine though, so no pts off.
 summary_by_cut <- diamonds %>% group_by(cut) %>% summarise(count = n(), 
                                                            avg_carat = round(mean(carat),2),
                                                            min_carat = min(carat),
@@ -90,7 +87,7 @@ summary_by_carat <- diamonds %>% group_by(carat) %>% summarise(count = n(),
                                                                avg_price = round(mean(price),2),
                                                                min_price = min(price),
                                                                max_price = max(price))
-                                                               
+# Some comments here and down in the server would be helpful, just took off a few for Code standards.
 summary_carat_cut <- diamonds %>% group_by(cut, carat) %>% summarise(count = n(),
                                                                      mode_color = mode(color),
                                                                      mode_clarity = mode(clarity),
